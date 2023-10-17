@@ -54,28 +54,29 @@ num_actions = (2, env.Nbeams)  # A tuple of two values: (beam type, beam number)
 Q = {}
 
 # Linear schedule for epsilon
-initial_epsilon = 0.99
-final_epsilon = 0.05
+initial_epsilon = 0.80
+final_epsilon = 0.1
 # epsilon_decay_steps = 1000  # Adjust this based on your training schedule
 epsilon = initial_epsilon
 
 # Training parameters
-num_episodes = 1000  # Adjust as needed
+num_epochs = 10  # Adjust as needed
 
-epsilon_decay_steps = num_episodes
+epsilon_decay_steps = num_epochs
 max_time_steps = env.Horizon
 
 
 # max_action = 0
 # max_action_rew = 0
 
-rew_arr = [0]
+rew_arr = []
+correct_arr = []
 
-for episode in range(num_episodes):
+for epoch in range(num_epochs):
     max_action = (0,0)
     max_action_rew = 0
 
-
+    tot_corr = 0
     obs = env.reset()
     total_reward = 0
 
@@ -100,6 +101,8 @@ for episode in range(num_episodes):
             # print("Q argmax: ", np.argmax(Q))
             
         new_obs, reward, correct, terminated, truncated, _ = env.step(action)
+
+        tot_corr += correct
 
         if action not in Q:
             Q[action] = [1, reward]
@@ -130,21 +133,28 @@ for episode in range(num_episodes):
         if terminated:
             break
         
-   
-    print(Q)
+    correct_arr.append(tot_corr)
+    # print(Q)
     # rew_arr.append(total_reward + rew_arr[-1])
-    rew_arr.append(total_reward)
+    rew_arr.append(total_reward/max_time_steps)
 
     print()
     # Decay epsilon over time
     # epsilon = np.random.uniform(0,1,1)[0]
-    epsilon = max(final_epsilon, initial_epsilon - episode / epsilon_decay_steps)
+    epsilon = max(final_epsilon, initial_epsilon - epoch / epsilon_decay_steps)
     print(epsilon)
 
-    # Print the total reward for this episode
-    print(f"Episode {episode + 1}/{num_episodes}, Total Reward: {total_reward}")
+    # Print the total reward for this epoch
+    print(f"Epoch {epoch + 1}/{num_epochs}, Total Reward: {total_reward}")
 
 
-
+plt.figure(figsize=(20,10))
+plt.subplot(1,2,1)
+plt.title("Avg Reward")
 plt.plot(range(1,len(rew_arr)+1),rew_arr)
+
+plt.subplot(1,2,2)
+plt.title("Total corrects per epoch")
+plt.plot(range(1,len(correct_arr)+1),correct_arr)
+
 plt.show()
