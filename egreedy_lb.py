@@ -16,20 +16,20 @@ def main():
 
     num_actions = (2, env.Nbeams) 
 
-    mean = 0.0
-    stddev = 1.0
+    # mean = 0.0
+    # stddev = 1.0
 
-    A = [[np.random.normal(mean, stddev, (5, 5)).astype(np.float32) for i in range(10)] for j in range(2)]
-    b = [[np.random.normal(mean, stddev, (5, 1)).astype(np.float32) for i in range(10)] for j in range(2)]
+    # A = [[np.random.normal(mean, stddev, (5, 5)).astype(np.float32) for i in range(10)] for j in range(2)]
+    # b = [[np.random.normal(mean, stddev, (5, 1)).astype(np.float32) for i in range(10)] for j in range(2)]
 
-    Theta = [[0 for i in range(10)] for j in range(2)]
+    # Theta = [[0 for i in range(10)] for j in range(2)]
 
-    for i in range(2):
-        for j in range(10):
-            Theta[i][j] = np.matmul(np.linalg.inv(A[i][j]), b[i][j])
+    # for i in range(2):
+    #     for j in range(10):
+    #         Theta[i][j] = np.matmul(np.linalg.inv(A[i][j]), b[i][j])
 
-    Q = np.array([np.array([0 for i in range(10)]) for j in range(2)])
-    #########################################################
+    # Q = np.array([np.array([0 for i in range(10)]) for j in range(2)])
+    # #########################################################
 
 
     num_epochs = 10  
@@ -39,6 +39,19 @@ def main():
     correct_arr = []
 
     for epoch in range(num_epochs):
+
+        A = [[np.random.rand(5, 5).astype(np.float32) for i in range(10)] for j in range(2)]
+        b = [[np.random.rand(5, 1).astype(np.float32) for i in range(10)] for j in range(2)]
+
+        Theta = [[0 for i in range(10)] for j in range(2)]
+
+        for i in range(2):
+            for j in range(10):
+                Theta[i][j] = np.matmul(np.linalg.inv(A[i][j]), b[i][j])
+
+        Q = np.array([np.array([0 for i in range(10)]) for j in range(2)])
+        #########################################################
+
 
         initial_epsilon = 0.80
         final_epsilon = 0.1
