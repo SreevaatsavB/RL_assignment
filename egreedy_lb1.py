@@ -16,11 +16,8 @@ def main():
 
     num_actions = (2, env.Nbeams) 
 
-    mean = 0.0
-    stddev = 1.0
-
-    A = [[np.random.normal(mean, stddev, (5, 5)).astype(np.float32) for i in range(10)] for j in range(2)]
-    b = [[np.random.normal(mean, stddev, (5, 1)).astype(np.float32) for i in range(10)] for j in range(2)]
+    A = [[np.random.rand(5, 5).astype(np.float32) for i in range(10)] for j in range(2)]
+    b = [[np.random.rand(5, 1).astype(np.float32) for i in range(10)] for j in range(2)]
 
     Theta = [[0 for i in range(10)] for j in range(2)]
 
@@ -32,7 +29,7 @@ def main():
     #########################################################
 
 
-    num_epochs = 1000 
+    num_epochs = 1000
 
 
     rew_arr = []
@@ -50,14 +47,12 @@ def main():
         #         Theta[i][j] = np.matmul(np.linalg.inv(A[i][j]), b[i][j])
 
         # Q = np.array([np.array([0 for i in range(10)]) for j in range(2)])
-        #########################################################
+        # #########################################################
 
 
-        initial_epsilon = 0.90
-        final_epsilon = 0.1
-        epsilon = initial_epsilon
 
-        # num_epochs = 10  
+        epsilon = 0.5
+        num_epochs = 10  
 
         epsilon_decay_steps = num_epochs
         max_time_steps = env.Horizon
@@ -121,12 +116,6 @@ def main():
 
 
         print()
-        # Decay epsilon over time
-        # epsilon = np.random.uniform(0,1,1)[0]
-        epsilon = max(final_epsilon, initial_epsilon - epoch/epsilon_decay_steps)
-        # epsilon = max(final_epsilon, initial_epsilon - epoch/num_epochs)
-
-        print(epsilon)
 
         # Print the total reward for this epoch
         print(f"Epoch {epoch + 1}/{num_epochs}, Total Reward: {total_reward}")
